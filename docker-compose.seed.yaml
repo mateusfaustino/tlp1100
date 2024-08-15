@@ -1,0 +1,19 @@
+version: '3.8'
+
+services: 
+
+  laravel:
+    build: 
+      context: /docker-laravel-seed
+    image: mateusfaustino/tlp1100:seed
+    container_name: laravel-seed
+    volumes:
+      - .:/var/www/laravel
+    ports:
+    - "8082:8000"
+    networks: 
+      - laranet
+
+networks: 
+  laranet:
+    driver: bridge      
