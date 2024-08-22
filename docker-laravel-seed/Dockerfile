@@ -1,16 +1,17 @@
+# Use a imagem oficial do PHP 8.2
 FROM php:8.2-cli
 
+# Defina o diretório de trabalho
 WORKDIR /var/www
 
-RUN apt-get update && \
-    apt-get install libzip-dev -y && \
-    docker-php-ext-install zip
+# Instale dependências necessárias
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php && \
-    php -r "unlink('composer-setup.php');"
+# Instale o Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN php composer.phar create-project --prefer-dist laravel/laravel laravel
-
-# ENTRYPOINT [ "php","laravel/artisan","serve" ]
-CMD [ "--host=0.0.0.0" ]
+# Use o Composer para criar um novo projeto Laravel na pasta src
+CMD ["composer", "create-project", "--prefer-dist", "laravel/laravel", "src"]
